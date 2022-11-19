@@ -1,0 +1,33 @@
+<p>
+  <mat-toolbar color="primary">
+      <mat-icon>local_fire_department</mat-icon>
+      <span>má kapela</span>
+  </mat-toolbar>
+</p>
+
+<div class="content-wrapper">
+  <div class="container-wrapper">
+    <div class="container">
+      <h2>All Songs</h2>
+      <mat-card cdkDropList id="songs" #songsList="cdkDropList"
+        [cdkDropListData]="songs"
+        [cdkDropListConnectedTo]="[playList]"
+        (cdkDropListDropped)="drop($event)"
+        class="list">
+        <p class="empty-label" *ngIf="songs.length === 0">Empty list</p>
+        <app-song *ngFor="let song of songs" cdkDrag [song]="song"></app-song>
+      </mat-card>
+    </div>
+    <div class="container">
+        <h2>My Playlist</h2>
+        <mat-card cdkDropList id="play" #playList="cdkDropList"
+          [cdkDropListData]="play"
+          [cdkDropListConnectedTo]="[songsList]"
+          (cdkDropListDropped)="drop($event)"
+          class="list">
+          <p class="empty-label" *ngIf="play.length === 0">Empty list</p>
+          <app-song *ngFor="let song of play" cdkDrag [song]="song"></app-song>
+        </mat-card>
+    </div>
+  </div>
+</div>
