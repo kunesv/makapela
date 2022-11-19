@@ -1,7 +1,10 @@
+import { SongDialogResult } from './song-dialog/song-dialog-result';
+import { SongDialogComponent } from './song-dialog/song-dialog.component';
 import { Song } from './song/song';
 import { Component } from '@angular/core';
 
 import { CdkDragDrop, transferArrayItem, moveItemInArray } from "@angular/cdk/drag-drop";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-root',
@@ -151,6 +154,8 @@ Ami E Ami
 
   play: Song[] = []
 
+  constructor(private dialog: MatDialog) { }
+
   drop(event: CdkDragDrop<Song[]>): void {
     if (!event.container.data || !event.previousContainer.data) {
       return
@@ -161,7 +166,20 @@ Ami E Ami
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex)
     }
+  }
 
-    console.log(this.songs.map((item) => item.text), this.play.map((item) => item.text))
+  newSong(): void {
+    const dialogRef = this.dialog.open(SongDialogComponent, {
+      width: '270px',
+      data: {
+        song: {}
+      }
+    })
+    dialogRef.afterClosed().subscribe((result: SongDialogResult|undefined) => {
+      if(!result) {
+        return
+      }
+      this.songs.push(result.song)
+    })
   }
 }
