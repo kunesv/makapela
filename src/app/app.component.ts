@@ -170,16 +170,39 @@ Ami E Ami
 
   newSong(): void {
     const dialogRef = this.dialog.open(SongDialogComponent, {
-      width: '270px',
       data: {
         song: {}
       }
     })
-    dialogRef.afterClosed().subscribe((result: SongDialogResult|undefined) => {
-      if(!result) {
+    dialogRef.afterClosed().subscribe((result: SongDialogResult | undefined) => {
+      console.log(result)
+      if (!result || !result.song || !result.song.title) {
         return
       }
       this.songs.push(result.song)
+    })
+  }
+
+  editSong(list: 'songs' | 'play', song: Song): void {
+    console.log('EDIT 1')
+    const dialogRef = this.dialog.open(SongDialogComponent, {
+      data: {
+        song,
+        enableDelete: true
+      }
+    })
+    dialogRef.afterClosed().subscribe((result: SongDialogResult | undefined) => {
+      console.log('EDIT 2')
+      if (!result) {
+        return
+      }
+      const dataList = this[list]
+      const songIndex = dataList.indexOf(song)
+      if (result.delete) {
+        dataList.splice(songIndex, 1)
+      } else {
+        dataList[songIndex] = song
+      }
     })
   }
 }

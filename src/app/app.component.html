@@ -17,7 +17,7 @@
           (cdkDropListDropped)="drop($event)"
           class="list">
           <p class="empty-label" *ngIf="songs.length === 0">Empty</p>
-          <app-song *ngFor="let song of songs" cdkDrag [song]="song"></app-song>
+          <app-song (edit)="editSong('songs', $event)" *ngFor="let song of songs" cdkDrag [song]="song"></app-song>
         </mat-card>
       </div>
       <div class="container">
@@ -28,7 +28,7 @@
             (cdkDropListDropped)="drop($event)"
             class="list">
             <p class="empty-label" *ngIf="play.length === 0">Empty</p>
-            <app-song *ngFor="let song of play" cdkDrag [song]="song"></app-song>
+            <app-song (edit)="editSong('play', $event)" *ngFor="let song of play" cdkDrag [song]="song"></app-song>
           </mat-card>
       </div>
     </div>
