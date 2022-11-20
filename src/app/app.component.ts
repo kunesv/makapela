@@ -149,7 +149,16 @@ Ami E
 Ami E
 Ami E Ami
       `
-    }
+    },
+    { title: 'A', text: 'B' },
+    { title: 'B', text: 'B' },
+    { title: 'C', text: 'B' },
+    { title: 'D', text: 'B' },
+    { title: 'E', text: 'B' },
+    { title: 'F', text: 'B' },
+    { title: 'G', text: 'B' },
+    { title: 'H', text: 'B' },
+    { title: 'CH', text: 'B' },
   ]
 
   play: Song[] = []
@@ -171,6 +180,7 @@ Ami E Ami
   newSong(): void {
     const dialogRef = this.dialog.open(SongDialogComponent, {
       data: {
+        width: '90vw',
         song: {}
       }
     })
@@ -184,15 +194,15 @@ Ami E Ami
   }
 
   editSong(list: 'songs' | 'play', song: Song): void {
-    console.log('EDIT 1')
     const dialogRef = this.dialog.open(SongDialogComponent, {
+      width: '100vw',
+      height: '95vh',
       data: {
         song,
         enableDelete: true
       }
     })
     dialogRef.afterClosed().subscribe((result: SongDialogResult | undefined) => {
-      console.log('EDIT 2')
       if (!result) {
         return
       }
