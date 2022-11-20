@@ -16,9 +16,9 @@
             "outputPath": "dist/makapela",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": [
+            "polyfills":
               "zone.js"
-            ],
+            ,
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -78,10 +78,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills":
+              "zone.js"
+
+            ,
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
@@ -92,6 +92,16 @@
               "src/styles.css"
             ],
             "scripts": []
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "makapela:build:production",
+            "firebaseProject": "makapelaakordy",
+            "firebaseHostingSite": "makapelaakordy"
           }
         }
       }

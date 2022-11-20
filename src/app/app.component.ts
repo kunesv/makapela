@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { SongDialogResult } from './song-dialog/song-dialog-result';
 import { SongDialogComponent } from './song-dialog/song-dialog.component';
 import { Song } from './song/song';
@@ -6,13 +7,15 @@ import { Component } from '@angular/core';
 import { CdkDragDrop, transferArrayItem, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatDialog } from "@angular/material/dialog";
 
+import { AngularFirestore } from "@angular/fire/compat/firestore";
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  songs: Song[] = [
+  songsOld: Song[] = [
     {
       title: 'Ohne Dich',
       text: `
@@ -161,14 +164,24 @@ Ami E Ami
     { title: 'CH', text: 'B' },
   ]
 
-  play: Song[] = []
+  songs = this.store.collection('songs').valueChanges({idField: 'id'}) as Observable<Song[]>
+  play = this.store.collection('play').valueChanges({idField: 'id'}) as Observable<Song[]>
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private store: AngularFirestore) {}
 
-  drop(event: CdkDragDrop<Song[]>): void {
+  drop(event: CdkDragDrop<Song[]|null>): void {
     if (!event.container.data || !event.previousContainer.data) {
       return
     }
+
+    const item = event.previousContainer.data[event.previousIndex]
+    this.store.firestore.runTransaction(()=>{
+      const promise = Promise.all([
+        this.store.collection(event.previousContainer.id).doc(item.id).delete(),
+        this.store.collection(event.container.id).add(item)
+      ])
+      return promise
+    })
 
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex)
@@ -185,11 +198,10 @@ Ami E Ami
       }
     })
     dialogRef.afterClosed().subscribe((result: SongDialogResult | undefined) => {
-      console.log(result)
       if (!result || !result.song || !result.song.title) {
         return
       }
-      this.songs.push(result.song)
+      this.store.collection('songs').add(result.song)
     })
   }
 
@@ -206,12 +218,10 @@ Ami E Ami
       if (!result) {
         return
       }
-      const dataList = this[list]
-      const songIndex = dataList.indexOf(song)
       if (result.delete) {
-        dataList.splice(songIndex, 1)
+        this.store.collection(list).doc(song.id).delete()
       } else {
-        dataList[songIndex] = song
+        this.store.collection(list).doc(song.id).update(song)
       }
     })
   }

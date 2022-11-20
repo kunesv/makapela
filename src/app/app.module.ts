@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -16,6 +17,9 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFireModule } from "@angular/fire/compat";
+import { AngularFirestoreModule } from "@angular/fire/compat/firestore";
+
 import { SongComponent } from './song/song.component';
 import { SongDialogComponent } from './song-dialog/song-dialog.component';
 
@@ -27,6 +31,8 @@ import { SongDialogComponent } from './song-dialog/song-dialog.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+
     MatToolbarModule,
     MatIconModule,
     MatCardModule,
@@ -35,10 +41,11 @@ import { SongDialogComponent } from './song-dialog/song-dialog.component';
     MatInputModule,
 
     FormsModule,
-
     DragDropModule,
 
-    BrowserAnimationsModule
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
